@@ -8,6 +8,9 @@ require('dotenv').config();
 app.use(express.json());
 
 // Routes
+app.get('/', (req, res) => {
+  res.send('Welcome to the Express MongoDB API!');
+});
 app.use('/users', userRoutes); // Prefix all user routes
 
 // Error handling middleware (optional)
