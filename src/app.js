@@ -9,7 +9,7 @@ app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Welcome to the Express MongoDB API!');
+  res.send('Welcome to the Express MongoDB API! Update');
 });
 app.use('/users', userRoutes); // Prefix all user routes
 
