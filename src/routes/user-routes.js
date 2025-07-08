@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { connectMongoDB } = require('../config/db/db'); // sesuaikan path
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 
 // 📄 GET All Users
 router.get('/', async (req, res) => {
@@ -69,6 +70,23 @@ router.delete('/:id', async (req, res) => {
     res.json({ message: 'User deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete user' });
+  }
+});
+
+// ✅ POST Register User
+router.post('/register', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const hashesPassword = await bcrypt.hash(password, 10);
+    const db = await connectMongoDB();
+    const result = await db.collection('users').insertOne({
+      email,
+      password: hashesPassword,
+      createdAt: new Date()
+    });
+    res.status(201).json(result.ops?.[0] || { _id: result.insertedId, email, message: 'User registered successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Registration failed' });
   }
 });
 
